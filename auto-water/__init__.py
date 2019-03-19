@@ -73,4 +73,10 @@ def create_app(test_config=None):
         }
         return render_template('index.html', current_state=current_state)
 
+    @app.route('/readme')
+    def readme():
+        import markdown2
+        rendered_md = markdown2.markdown_path('README.md')
+        return render_template('readme.html', rendered_md=rendered_md)
+
     return app

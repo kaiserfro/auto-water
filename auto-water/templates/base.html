@@ -12,12 +12,16 @@
 <body>
     <div class="container">
         <nav>
-            <h1>Auto Water</h1>
+            <div class="nav-wrapper">
+                <a href="/" class="brand-logo">Auto-Water</a>
+                <ul class="right hide-on-med-and-down">
+                    <li {%- if request.path == "/" %} class="active"{% endif %}><a href="/">Status</a></li>
+                    <li {%- if request.path == "/readme" %} class="active"{% endif %}><a href="/readme">Readme</a></li>
+                </ul>
+            </div>
         </nav>
         <section class="content">
-            <header>
-                {% block header %}{% endblock %}
-            </header>
+            {% block header %}{% endblock %}
             {% for message in get_flashed_messages() %}
                 <div class="flash">{{ message }}</div>
             {% endfor %}
