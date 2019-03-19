@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Current Status{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div id="gaugeContainer" class="row" style="width: 500px; height: 400px;">
+    <script type="text/javascript">
+        const dataSet = anychart.data.set([
+            {{ current_state.current_moisture_value }},
+            {{ current_state.water_on_threshold }},
+            {{ current_state.water_off_threshold }}
+        ]);
+        const gauge = anychart.gauges.circular();
+        gauge.data(dataSet);
+        gauge.startAngle(270);
+        gauge.sweepAngle(180);
+        const axis = gauge.axis().radius(95).width(1);
+        axis.scale()
+            .minimum(0).maximum(100)
+            .ticks({interval: 10})
+            .minorTicks({interval: 1});
+        axis.ticks()
+            .enabled(true)
+            .type('trapezoid')
+            .length(8);
+        axis.minorTicks()
+            .enabled(true)
+            .length(1);
+        gauge.needle(0)
+            .enabled(true)
+            .fill("blue")
+            .startRadius('-5%')
+            .endRadius('80%')
+            .middleRadius(0)
+            .startWidth('0.1%')
+            .endWidth('0.1%')
+            .middleWidth('5%');
+        gauge.cap()
+            .enabled(true)
+            .radius('6%');
+        gauge.marker(0)
+            .axisIndex(0)
+            .dataIndex(1)
+            .size(7)
+            .type('triangledown')
+            .position('outside')
+            .radius(95);
+        gauge.marker(1)
+            .axisIndex(0)
+            .dataIndex(2)
+            .size(7)
+            .type('triangleup')
+            .position('inside')
+            .radius(95);
+        gauge.container('gaugeContainer').draw();
+    </script>
+</div>
+
+<div class="row">
+    <div class="col s3">
+        <div class="card blue-grey">
+            <div class="card-content white-text">
+                <h1 class="center-align {{ "green-text" if current_state.water_state else "red-text" }}">{{ "ON" if current_state.water_state else "OFF" }}</h1>
+            </div>
+            <div class="card-action white-text center-align">
+                Water
+            </div>
+        </div>
+    </div>
+    <div class="col s3">
+        <div class="card blue">
+            <div class="card-content white-text">
+                <h1 class="center-align">{{ "{:3.0f}%".format(current_state.current_moisture_value) }}</h1>
+            </div>
+            <div class="card-action white-text center-align">
+                Current Moisture
+            </div>
+        </div>
+    </div>
+    <div class="col s3">
+        <div class="card green">
+            <div class="card-content white-text">
+                <h1 class="center-align">{{ "{:3.0f}%".format(current_state.water_on_threshold) }}</h1>
+            </div>
+            <div class="card-action white-text center-align">
+                Water On Threshold
+            </div>
+        </div>
+    </div>
+    <div class="col s3">
+        <div class="card red">
+            <div class="card-content white-text">
+                <h1 class="center-align">{{ "{:3.0f}%".format(current_state.water_off_threshold) }}</h1>
+            </div>
+            <div class="card-action white-text center-align">
+                Water Off Threshold
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,3 @@
+graft auto-water/static
+graft auto-water/templates
+global-exclude *.pyc
