@@ -17,8 +17,11 @@ valve = LED(19)
 
 # Configure database
 home_dir = str(Path.home())
-config_db = TinyDB(os.path.join(home_dir, 'config_db.json'))
+db = TinyDB(os.path.join(home_dir, 'config_db.json'))
+config_db = db.table('config', cache_size=0)
 Key = Query()
+on_threshold = config_db.search(Key.key == 'water_on_threshold')[0]['value']
+off_threshold = config_db.search(Key.key == 'water_off_threshold')[0]['value']
 
 queue = deque([], 10)
 loopcount = 0
@@ -43,7 +46,7 @@ while True:
             'value': True
         }, Key.key == 'water_state')
         print('turn water on')
-    if valve.is_lit and all([x > off_threshold for x in queue[-3:]]):
+    if valve.is_lit and all([x > off_threshold for x in queue][-3:]):
         valve.off()
         config_db.upsert({
             'key': 'water_state',

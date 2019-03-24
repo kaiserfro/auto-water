@@ -28,37 +28,32 @@ def create_app(test_config=None):
         pass
 
     home_dir = str(Path.home())
-    config_db = TinyDB(os.path.join(home_dir, 'config_db.json'))
-    monitor_db = TinyDB(os.path.join(home_dir, 'monitor_db.json'))
-
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
+    db = TinyDB(os.path.join(home_dir, 'config_db.json'))
+    config_db = db.table('config', cache_size=0)
 
     @app.route('/fill')
     def fill_data():
-        config_db.purge()
-        config_db.insert({
+        Key = Query()
+        config_db.upsert({
             'key': 'water_state',
             'value': False
-        })
-        config_db.insert({
+        }, Key.key == 'water_state')
+        config_db.upsert({
             'key': 'current_moisture_value',
             'value': 700
-        })
-        config_db.insert({
+        }, Key.key == 'current_moisture_value')
+        config_db.upsert({
             'key': 'max_moisture_value',
             'value': 800
-        })
-        config_db.insert({
+        }, Key.key == 'max_moisture_value')
+        config_db.upsert({
             'key': 'water_on_threshold',
             'value': 350
-        })
-        config_db.insert({
+        }, Key.key == 'water_on_threshold')
+        config_db.upsert({
             'key': 'water_off_threshold',
             'value': 425
-        })
+        }, Key.key == 'water_off_threshold')
         return "Done."
 
 
@@ -67,9 +62,11 @@ def create_app(test_config=None):
         Key = Query()
         max_moisture_value = config_db.search(Key.key == 'max_moisture_value')[0]['value']
         print(max_moisture_value)
+        current_moisture_value = config_db.search(Key.key == 'current_moisture_value')[0]['value']
+        print(current_moisture_value)
         current_state = {
             'water_state': config_db.search(Key.key == 'water_state')[0]['value'],
-            'current_moisture_value': config_db.search(Key.key == 'current_moisture_value')[0]['value'] * 100 / max_moisture_value ,
+            'current_moisture_value': current_moisture_value * 100 / max_moisture_value ,
             'water_on_threshold': config_db.search(Key.key == 'water_on_threshold')[0]['value'] * 100 / max_moisture_value,
             'water_off_threshold': config_db.search(Key.key == 'water_off_threshold')[0]['value'] * 100 / max_moisture_value
         }

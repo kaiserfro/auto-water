@@ -11,6 +11,7 @@ setup(
         "tinydb",
         "markdown2",
         "adafruit-mcp3008",
-        "Adafruit_GPIO"
+        "Adafruit_GPIO",
+        "gpiozero"
     ]
 )
