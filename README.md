@@ -39,6 +39,8 @@ A small, soil watering system that takes into account current soil conditions to
 
 ### Schematic
 
+![Schematic](doc/schematic.png)
+
 ### Software Design
 
 #### Monitoring and Control Process
@@ -51,6 +53,13 @@ Standalone process that periodically wakes up and:
 1. If water is currently *ON*, set the water off based upon value above **off threshold**.
 1. Record the water on/off setting in the control database.
 1. Record all of the information and timestamp of reading into the history database.
+
+* Testing the valve shows that the water flows pretty quickly, so the period at which this app must wake up is very short, maybe every 100ms.
+* Testing the sensor shows that it reads 0 in dry air.
+  * In water its reading around 500-600.
+  * Against a damp sponge its reading 400's.
+  * Using the tip of the sensor is different than the side of it.
+  * Need more testing to get a feel for proper moisture thresholds.
 
 #### Web-based Interface
 
@@ -67,6 +76,7 @@ A simple [Flask](http://flask.pocoo.org/docs/1.0/) application that provides a m
   * Host web application in cloud
   * Accessible remotely
 * Auto-configuration, wifi, etc.
+* Handle multiple sensors, multiple valves to handle multiple plants with one system
 
 ## Resources
 
