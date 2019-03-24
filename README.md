@@ -65,6 +65,27 @@ Standalone process that periodically wakes up and:
 
 A simple [Flask](http://flask.pocoo.org/docs/1.0/) application that provides a method to visualize the current information and to control the configuration of the system, such as the water on and off thresholds.
 
+#### Software Installation
+
+1. Clone the repo from github (https://github.com/kaiserfro/auto-water.git).
+1. `cd auto-water`
+1. `virtualenv -p python3 .`
+1. `./bin/python setup.py install`
+
+#### Run Software
+
+Start the web interface:
+
+```sh
+./run.sh
+```
+
+Start the monitor
+
+```sh
+./monitor.sh
+```
+
 ## Future Enhancements
 
 * Add capability to mix in fertilizer
