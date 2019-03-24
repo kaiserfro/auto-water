@@ -9,6 +9,8 @@ setup(
     install_requires=[
         "flask",
         "tinydb",
-        "markdown2"
+        "markdown2",
+        "adafruit-mcp3008",
+        "Adafruit_GPIO"
     ]
 )

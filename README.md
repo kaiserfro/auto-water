@@ -1,6 +1,6 @@
 # Auto Watering System
 
-A small, soil watering system that takes into account current soil conditions to keep the moisture level as suitable conditions for the plant in the pot.
+A small, soil watering system that takes into account current soil conditions to keep the moisture level at suitable conditions for the plant in the pot.
 
 ## Feature Set
 
@@ -75,6 +75,8 @@ A simple [Flask](http://flask.pocoo.org/docs/1.0/) application that provides a m
 * https://materializecss.com/
 * https://tinydb.readthedocs.io/en/latest/index.html
 * http://flask.pocoo.org/docs/1.0/
+* https://pimylifeup.com/raspberry-pi-adc/
+* https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters/mcp3008
 
 ## TODO
 
