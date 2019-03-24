@@ -61,6 +61,28 @@ Standalone process that periodically wakes up and:
   * Using the tip of the sensor is different than the side of it.
   * Need more testing to get a feel for proper moisture thresholds.
 
+##### Pseudocode
+
+* Configure SPI interface.
+* Connect to database.
+* While forever:
+  * Read the sensor channel 0 from SPI.
+  * Append sensor reading to list.
+  * Record sensor reading in database.
+  * If water is off:
+    * Compare list values to water on threshold.
+    * If last 10 values are less than threshold:
+      * Turn on water gpio.
+      * Record water state in database.
+      * Record transition time in history database.
+  * If water is on:
+    * Compare list values to water off threshold.
+    * If last 3 values are greater than threshold:
+      * Turn off water gpio.
+      * Record water state in database.
+      * Record transition time in history database.
+  * Sleep for 100ms.
+
 #### Web-based Interface
 
 A simple [Flask](http://flask.pocoo.org/docs/1.0/) application that provides a method to visualize the current information and to control the configuration of the system, such as the water on and off thresholds.

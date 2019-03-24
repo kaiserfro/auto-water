@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from flask import (
     Flask, Blueprint, flash, g, redirect, render_template, request, url_for
@@ -26,8 +27,9 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    config_db = TinyDB(os.path.join(app.instance_path, 'config_db.json'))
-    monitor_db = TinyDB(os.path.join(app.instance_path, 'monitor_db.json'))
+    home_dir = str(Path.home())
+    config_db = TinyDB(os.path.join(home_dir, 'config_db.json'))
+    monitor_db = TinyDB(os.path.join(home_dir, 'monitor_db.json'))
 
     # a simple page that says hello
     @app.route('/hello')
