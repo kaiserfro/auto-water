@@ -13,6 +13,7 @@ setup(
         "adafruit-mcp3008",
         "Adafruit_GPIO",
         "gpiozero",
-        "tinydb-appengine"
+        "tinydb-appengine",
+        "requests"
     ]
 )
