@@ -80,7 +80,9 @@
     <div class="col s3">
         <div class="card green">
             <div class="card-content white-text">
-                <h1 class="center-align">{{ "{:3.0f}%".format(current_state.water_on_threshold) }}</h1>
+                <h1 class="center-align tooltipped" data-position="bottom" data-tooltip="Click to change value" onclick="setOnThreshold();">
+                    {{ "{:3.0f}%".format(current_state.water_on_threshold) }}
+                </h1>
             </div>
             <div class="card-action white-text center-align">
                 Water On Threshold
@@ -90,7 +92,9 @@
     <div class="col s3">
         <div class="card red">
             <div class="card-content white-text">
-                <h1 class="center-align">{{ "{:3.0f}%".format(current_state.water_off_threshold) }}</h1>
+                <h1 class="center-align tooltipped" data-position="bottom" data-tooltip="Click to change value" onclick="setOffThreshold();">
+                    {{ "{:3.0f}%".format(current_state.water_off_threshold) }}
+                </h1>
             </div>
             <div class="card-action white-text center-align">
                 Water Off Threshold
@@ -98,5 +102,30 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.tooltipped');
+    var options = {};
+    var instances = M.Tooltip.init(elems, options);
+});
+
+function setOnThreshold() {
+    var threshold = window.prompt("Enter new ON threshold");
+    var oReq = new XMLHttpRequest();
+    oReq.open('GET', '/set_on_threshold/' + threshold);
+    oReq.send();
+    location.reload();
+}
+
+function setOffThreshold() {
+    var threshold = window.prompt("Enter new OFF threshold");
+    var oReq = new XMLHttpRequest();
+    oReq.open('GET', '/set_off_threshold/' + threshold);
+    oReq.send();
+    location.reload();
+}
+
+</script>
 
 {% endblock %}

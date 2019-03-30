@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from flask import (
-    Flask, Blueprint, flash, g, redirect, render_template, request, url_for
+    Flask, Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 )
 from tinydb import TinyDB, Query
 
@@ -77,5 +77,25 @@ def create_app(test_config=None):
         import markdown2
         rendered_md = markdown2.markdown_path('README.md')
         return render_template('readme.html', rendered_md=rendered_md)
+
+    @app.route('/set_on_threshold/<int:threshold>')
+    def set_on_threshold(threshold):
+        Key = Query()
+        max_moisture_value = config_db.search(Key.key == 'max_moisture_value')[0]['value']
+        config_db.upsert({
+            'key': 'water_on_threshold',
+            'value': threshold * max_moisture_value // 100
+        }, Key.key == 'water_on_threshold')
+        return jsonify({'status': 'success'})
+
+    @app.route('/set_off_threshold/<int:threshold>')
+    def set_off_threshold(threshold):
+        Key = Query()
+        max_moisture_value = config_db.search(Key.key == 'max_moisture_value')[0]['value']
+        config_db.upsert({
+            'key': 'water_off_threshold',
+            'value': threshold * max_moisture_value // 100
+        }, Key.key == 'water_off_threshold')
+        return jsonify({'status': 'success'})
 
     return app
