@@ -120,6 +120,7 @@ Start the monitor
   * Accessible remotely
 * Auto-configuration, wifi, etc.
 * Handle multiple sensors, multiple valves to handle multiple plants with one system
+* Track history of sensor readings and when water is on/off.
 
 ## Resources
 
@@ -133,10 +134,5 @@ Start the monitor
 
 ## TODO
 
-* ~~Convert Data below the guage to cards~~
 * Add button to turn water on/off immediately (request)
-* Add form to adjust the thresholds
 * Autostart the apps on the rpi
-* ~~Create module to control valve output (actual)~~
-* ~~Create module to monitor the moisture and report to database~~
-* Add web page to show timestamped history
