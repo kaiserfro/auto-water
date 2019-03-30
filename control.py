@@ -1,11 +1,12 @@
 import os
 from collections import deque
-from pathlib import Path
 from time import sleep
 from gpiozero import LED
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
-from tinydb import TinyDB, Query
+import requests
+
+url = 'https://water-inator.appspot.com'
 
 # Hardware SPI configuration:
 SPI_PORT   = 0
@@ -15,42 +16,50 @@ mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 # Configure GPIO
 valve = LED(19)
 
+def get_on_threshold():
+    r = requests.get('{}/get_on_threshold'.format(url))
+    if r.status_code == 200:
+        return r.json()['value']
+    return 800
+
+def get_off_threshold():
+    r = requests.get('{}/get_off_threshold'.format(url))
+    if r.status_code == 200:
+        return r.json()['value']
+    return 0
+
+def send_current_reading(value):
+    r = requests.get('{}/set_current_moisture_value/{}'.format(url, value))
+    return r.status_code
+
+def send_water_state(value):
+    r = requests.get('{}/set_water_state/{}'.format(url, 'true' if value else 'false'))
+    return r.status_code
+
 # Configure database
-home_dir = str(Path.home())
-db = TinyDB(os.path.join(home_dir, 'config_db.json'))
-config_db = db.table('config', cache_size=0)
-Key = Query()
-on_threshold = config_db.search(Key.key == 'water_on_threshold')[0]['value']
-off_threshold = config_db.search(Key.key == 'water_off_threshold')[0]['value']
+on_threshold = get_on_threshold()
+off_threshold = get_off_threshold()
 
 queue = deque([], 10)
 loopcount = 0
 while True:
+    currentreading = mcp.read_adc(0)
+
     loopcount += 1
     if loopcount % 10 == 0:
-        on_threshold = config_db.search(Key.key == 'water_on_threshold')[0]['value']
-        off_threshold = config_db.search(Key.key == 'water_off_threshold')[0]['value']
+        on_threshold = get_on_threshold()
+        off_threshold = get_off_threshold()
         print('on:{} off:{}'.format(on_threshold, off_threshold))
         print('rs:{}'.format(queue))
+        send_current_reading(currentreading)
 
-    currentreading = mcp.read_adc(0)
     queue.append(currentreading)
-    config_db.upsert({
-        'key': 'current_moisture_value',
-        'value': currentreading
-    }, Key.key == 'current_moisture_value')
     if not valve.is_lit and all([x < on_threshold for x in queue]):
         valve.on()
-        config_db.upsert({
-            'key': 'water_state',
-            'value': True
-        }, Key.key == 'water_state')
+        send_water_state(True)
         print('turn water on')
     if valve.is_lit and all([x > off_threshold for x in queue][-3:]):
         valve.off()
-        config_db.upsert({
-            'key': 'water_state',
-            'value': False
-        }, Key.key == 'water_state')
+        send_water_state(False)
         print('turn water off')
     sleep(0.1)
