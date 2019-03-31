@@ -41,6 +41,8 @@ A small, soil watering system that takes into account current soil conditions to
 
 ![Schematic](doc/schematic.png)
 
+![Bread Board](doc/rpi-bread-board.png)
+
 ### Software Design
 
 #### Monitoring and Control Process
@@ -132,7 +134,10 @@ Start the monitor
 * https://pimylifeup.com/raspberry-pi-adc/
 * https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters/mcp3008
 
+## Final Presentation
+
+![TriFold](doc/trifold.png)
+
 ## TODO
 
 * Add button to turn water on/off immediately (request)
-* Autostart the apps on the rpi
