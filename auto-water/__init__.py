@@ -15,6 +15,28 @@ app.config.from_mapping(
 db = TinyDB('config_db.json', storage=EphemeralJSONStorage)
 config_db = db.table('config', cache_size=0)
 
+Key = Query()
+config_db.upsert({
+    'key': 'water_state',
+    'value': False
+}, Key.key == 'water_state')
+config_db.upsert({
+    'key': 'current_moisture_value',
+    'value': 700
+}, Key.key == 'current_moisture_value')
+config_db.upsert({
+    'key': 'max_moisture_value',
+    'value': 800
+}, Key.key == 'max_moisture_value')
+config_db.upsert({
+    'key': 'water_on_threshold',
+    'value': 350
+}, Key.key == 'water_on_threshold')
+config_db.upsert({
+    'key': 'water_off_threshold',
+    'value': 425
+}, Key.key == 'water_off_threshold')
+
 @app.route('/fill')
 def fill_data():
     Key = Query()
