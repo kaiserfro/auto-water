@@ -20,13 +20,13 @@ def get_on_threshold():
     r = requests.get('{}/get_on_threshold'.format(url))
     if r.status_code == 200:
         return r.json()['value']
-    return 800
+    return 350
 
 def get_off_threshold():
     r = requests.get('{}/get_off_threshold'.format(url))
     if r.status_code == 200:
         return r.json()['value']
-    return 0
+    return 600
 
 def send_current_reading(value):
     r = requests.get('{}/set_current_moisture_value/{}'.format(url, value))
